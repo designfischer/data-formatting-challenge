@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Formatting Challenge</title>
+</head>
+<body>
+
+    <script>
+
+        const sessionStartedAt = new Date().getTime()
+
+        const minutes = [0, 1, 30, 60, 60*6, 23*60, 24*60]        
+
+        const minutesInMS = minutes.map(item => item*1000*60)
+
+        minutesInMS.map(item => createHTMLElement(item, item))
+        
+        function createHTMLElement(span_class, initial_time) { 
+            
+            const spanClassName = 'span' + String(span_class)   
+            const initialTime = initial_time          
+
+            let div = document.createElement('div')
+            div.innerHTML = 'Started '
+
+            let span = document.createElement('span')
+            span.className = `js-date-format ${spanClassName}`           
+            span.innerHTML = formatTimes(initial_time)
+
+            div.appendChild(span)
+
+            document.body.appendChild(div)
+
+            setInterval(updateHTMLElement, 1000, spanClassName, initialTime)
+
+        }
+
+        function updateHTMLElement(span_class, initial_time) {
+
+            const initialTime = initial_time
+
+            const currentTimeInMS = new Date().getTime()
+
+            const timeElapsed = currentTimeInMS - (sessionStartedAt - initialTime)
+
+            const span = document.querySelector(`.${span_class}`)
+            span.innerHTML = formatTimes(timeElapsed)
+
+        }
+
+        function formatTimes(time_in_MS) {
+
+            const seconds = (time_in_MS/1000).toFixed(0)
+
+            if (seconds <= 1) {
+
+                return seconds + ' second ago'
+
+            } else if (seconds < 60) {
+
+                return seconds + ' seconds ago'
+
+            } else if ( seconds < 60*2) {
+
+                const minute = Math.floor(seconds / 60) 
+                console.log(minute)
+
+                return minute + ' minute ago'
+
+            } else if ( seconds < 60*60 ) {
+
+                const minutes = Math.floor(seconds / 60)
+                return minutes + ' minutes ago'
+
+            } else if ( seconds < 60*60*2 ) {
+
+                const hour = Math.floor(seconds / (60*60))
+                return hour + ' hour ago'
+
+            } else if ( seconds < 60*60*24) {
+
+                const hours = Math.floor(seconds / (60*60))
+                return hours + ' hours ago'
+
+            } else {
+
+                const currentDate = new Date().getTime()
+                const date = currentDate - (seconds*1000)
+                return new Date(date).toISOString() 
+
+            }
+        }
+
+    </script>
+    
+</body>
+</html>
